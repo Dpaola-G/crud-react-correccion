@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de Productos</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .add-button {
+            margin-bottom: 10px;
+        }
+        .form-container {
+            display: none;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Bienvenido, {{ usuario }}!</h2>
+    <h3>Tabla de Productos</h3>
+    <button id="show-form-button" class="add-button">Agregar Producto</button>
+    <div class="form-container" id="form-container">
+        <h4>Agregar Producto</h4>
+        <form id="product-form" action="/agregar_producto" method="POST" enctype="multipart/form-data">
+            <label for="codigo">Código:</label><br>
+            <input type="text" id="codigo" name="codigo" required><br>
+            <label for="nombre">Nombre:</label><br>
+            <input type="text" id="nombre" name="nombre" required><br>
+            <label for="categoria">Categoría:</label><br>
+            <input type="text" id="categoria" name="categoria" required><br>
+            <label for="precio">Precio:</label><br>
+            <input type="text" id="precio" name="precio" required><br>
+            <label for="foto">Foto:</label><br>
+            <input type="file" id="foto" name="foto" accept="image/*"><br><br>
+            <input type="submit" value="Agregar">
+        </form>
+    </div>
+    <table id="product-table">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Foto</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+            <tr>
+                <td>{{ producto.codigo }}</td>
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.categoria }}</td>
+                <td>{{ producto.precio }}</td>
+                <td><img src="data:image/jpeg;base64,{{ producto.foto }}" alt="Foto del Producto" style="max-width: 100px;"></td>
+                <td><button onclick="editarProducto(this)">Editar</button><button onclick="eliminarProducto(this)">Eliminar</button></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById('show-form-button').addEventListener('click', function() {
+            document.getElementById('form-container').style.display = 'block';
+        });
+
+        document.getElementById('product-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evita que se envíe el formulario por defecto
+
+            // Captura los valores del formulario
+            var codigo = document.getElementById('codigo').value;
+            var nombre = document.getElementById('nombre').value;
+            var categoria = document.getElementById('categoria').value;
+            var precio = document.getElementById('precio').value;
+
+            // Crea una nueva fila en la tabla con los valores del formulario
+            var tableBody = document.getElementById('product-table').getElementsByTagName('tbody')[0];
+            var newRow = tableBody.insertRow();
+            newRow.innerHTML = `<td>${codigo}</td><td>${nombre}</td><td>${categoria}</td><td>${precio}</td><td><img src="data:image/jpeg;base64,{{ foto }}" alt="Foto del Producto" style="max-width: 100px;"></td><td><button onclick="editarProducto(this)">Editar</button><button onclick="eliminarProducto(this)">Eliminar</button></td>`;
+        });
+
+        function editarProducto(button) {
+            // Aquí deberías implementar la lógica para editar el producto correspondiente a la fila en la que se encuentra el botón
+            console.log('Editar producto');
+        }
+
+        function eliminarProducto(button) {
+            // Aquí deberías implementar la lógica para eliminar el producto correspondiente a la fila en la que se encuentra el botón
+            console.log('Eliminar producto');
+        }
+    </script>
+</body>
+</html>
